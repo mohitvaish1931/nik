@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>For Nikita</title>
+<meta name="theme-color" content="#0d0a09">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500;1,600&family=Karla:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* VOICE: tender, quiet, cinematic — a late-night truth, said slowly
+   IDEA: the closing scene of a film, then a box of "open when" letters, then lanterns let go into the sky
+   PICTURE: one candle in a dark room full of drifting warm light; later, a sky of rising lanterns
+   COLOUR and TYPE: warm black, candle amber, soft rose; Cormorant Garamond + Karla
+   LAYOUT: start screen → word-by-word film over soft music → sealed envelopes → lantern sky + promise */
+:root{color-scheme:dark;--bg:#0d0a09;--ink:#f4ebe0;--soft:#b8aa9c;--amber:#f2c37a;--rose:#e7a1a6;--paper:#f6ecdc;--pInk:#2e2420}
+:root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.6 Karla,system-ui,sans-serif;overflow-x:clip}
+#bg{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none}
+.grain{position:fixed;inset:-50%;z-index:50;pointer-events:none;opacity:.07;mix-blend-mode:overlay;background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='180' height='180'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");animation:grain 1s steps(4) infinite}
+@keyframes grain{25%{transform:translate(-3%,2%)}50%{transform:translate(2%,-3%)}75%{transform:translate(-2%,-1%)}}
+main{position:relative;z-index:1}
+.band{padding:clamp(28px,4vw,64px) max(5vw,16px)}
+h1,h2{font-family:"Cormorant Garamond",Georgia,serif;font-weight:600;line-height:1.05;text-wrap:balance;margin:0}
+h1{font-size:clamp(44px,8vw,52px)}
+h2{font-size:clamp(32px,5vw,44px)}
+button{font:600 16px Karla,sans-serif;min-height:44px;padding:12px 28px;border-radius:999px;border:0;cursor:pointer;background:linear-gradient(#f7d496,var(--amber));color:#2a1a08;box-shadow:0 0 40px rgba(242,195,122,.3);transition:box-shadow .4s,transform .4s}
+button:hover{box-shadow:0 0 60px rgba(242,195,122,.55);transform:translateY(-1px)}
+button.ghost{background:rgba(13,10,9,.4);color:var(--soft);border:1px solid rgba(184,170,156,.45);box-shadow:none}
+button:focus-visible{outline:3px solid var(--rose);outline-offset:3px}
+.film{position:relative;min-height:100svh;display:grid;place-items:center;text-align:center;overflow:hidden;background:radial-gradient(ellipse at 50% 60%,rgba(70,40,18,.55) 0,rgba(13,10,9,0) 60%)}
+.film::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse at 50% 50%,rgba(0,0,0,0) 45%,rgba(0,0,0,.65) 100%)}
+.dawn{position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity 4s;background:radial-gradient(ellipse at 50% 110%,rgba(242,165,110,.45) 0,rgba(231,161,166,.18) 35%,rgba(13,10,9,0) 70%)}
+.dawn.on{opacity:1}
+.start{position:relative;z-index:2;max-width:30em;padding:24px;transition:opacity 1.4s,transform 1.4s,filter 1.4s}
+.start.away{opacity:0;transform:scale(.96);filter:blur(6px)}
+.start p{color:var(--soft);margin:14px auto 28px}
+.candle{width:min(140px,34vw);display:block;margin:0 auto 26px;overflow:visible}
+.flame{transform-origin:60px 90px;animation:flick 2.6s ease-in-out infinite}
+.flame2{transform-origin:60px 90px;animation:flick 1.7s ease-in-out infinite reverse}
+@keyframes flick{25%{transform:scale(1.03,1.08) rotate(-2.5deg)}50%{transform:scale(.97,.94) rotate(1.5deg)}75%{transform:scale(1.02,1.05) rotate(-1deg)}}
+.halo{animation:breathe 3.4s ease-in-out infinite}
+@keyframes breathe{50%{opacity:.6;transform:scale(.96)}}
+.halo{transform-origin:60px 70px}
+.again{margin:14px auto 0;display:block}
+.stage{position:absolute;inset:0;z-index:2;display:grid;place-items:center;padding:24px max(6vw,20px);pointer-events:none;opacity:0;transition:opacity 1.2s}
+.stage.on{pointer-events:auto;opacity:1;cursor:pointer}
+.line{font-family:"Cormorant Garamond",Georgia,serif;font-style:italic;font-weight:500;font-size:clamp(30px,5.2vw,50px);line-height:1.25;max-width:19em;text-wrap:balance;margin:0;transition:opacity .8s,transform .8s,filter .8s;text-shadow:0 0 30px rgba(242,195,122,.15)}
+.line span{display:inline-block;opacity:0;filter:blur(10px);transform:translateY(14px);transition:opacity 1s,filter 1.1s,transform 1.1s cubic-bezier(.2,.7,.2,1)}
+.line.show span{opacity:1;filter:none;transform:none}
+.line.out{opacity:0;transform:translateY(-14px);filter:blur(6px)}
+.line.big{font-size:clamp(36px,7vw,64px);color:var(--amber);text-shadow:0 0 40px rgba(242,195,122,.35)}
+.line.rose{color:var(--rose);text-shadow:0 0 40px rgba(231,161,166,.3)}
+.tapHint{position:absolute;z-index:2;bottom:30px;left:0;right:0;margin:0;font-size:13px;color:#857869;transition:opacity 2s}
+.bar{position:absolute;z-index:2;left:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--rose),var(--amber));width:0;transition:width 1s linear;box-shadow:0 0 12px var(--amber)}
+.mute{position:fixed;top:14px;right:14px;z-index:60;width:44px;height:44px;padding:0;background:rgba(13,10,9,.55);color:var(--soft);border:1px solid rgba(184,170,156,.35);box-shadow:none;display:none;place-items:center;backdrop-filter:blur(6px)}
+.mute.on{display:grid}.mute svg{width:20px;height:20px}
+.rest[hidden]{display:none}
+.rest{animation:fade 2s ease-out}
+@keyframes fade{from{opacity:0}}
+.intro{text-align:center;max-width:34em;margin:0 auto}
+.intro p{color:var(--soft);margin:12px auto 0}
+.env{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,260px),1fr));gap:52px 26px;max-width:1040px;margin:70px auto 0}
+.e{position:relative;aspect-ratio:1.55;border-radius:10px;padding:0;background:linear-gradient(160deg,#e9dbc1,#d8c4a2);box-shadow:0 18px 44px rgba(0,0,0,.5);perspective:700px;transition:transform .4s,box-shadow .4s;color:var(--pInk);overflow:visible}
+.e:hover{transform:translateY(-5px) rotate(-.6deg);box-shadow:0 26px 54px rgba(0,0,0,.6),0 0 40px rgba(242,195,122,.15)}
+.e .pp{position:absolute;left:7%;right:7%;top:8%;bottom:8%;border-radius:4px;background:var(--paper) repeating-linear-gradient(180deg,transparent 0 13px,rgba(150,120,90,.18) 13px 14px);transition:transform .8s cubic-bezier(.2,.7,.2,1) .35s;z-index:1}
+.e .pk{position:absolute;inset:0;border-radius:10px;background:linear-gradient(170deg,#efe2ca,#dcc9a8);clip-path:polygon(0 36%,50% 64%,100% 36%,100% 100%,0 100%);z-index:2;box-shadow:inset 0 -10px 20px rgba(120,90,50,.15)}
+.e .sd{position:absolute;inset:0;border-radius:10px;background:linear-gradient(90deg,#e2d1b1,#ead9bd 50%,#e2d1b1);clip-path:polygon(0 0,50% 52%,100% 0,100% 100%,0 100%);z-index:2;opacity:.6}
+.e .fl{position:absolute;left:0;right:0;top:0;height:52%;background:linear-gradient(#e7d6b8,#d6c19e);clip-path:polygon(0 0,100% 0,50% 100%);transform-origin:top;transition:transform .7s cubic-bezier(.4,0,.2,1),z-index 0s .35s;z-index:4;border-radius:10px 10px 0 0;filter:drop-shadow(0 3px 3px rgba(0,0,0,.2))}
+.e .seal{position:absolute;left:50%;top:52%;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#e08a93,#a33447 70%);box-shadow:0 3px 8px rgba(0,0,0,.35),inset 0 -3px 6px rgba(0,0,0,.25);display:grid;place-items:center;font:600 21px "Cormorant Garamond",serif;color:#f8dcd8;z-index:5;transition:opacity .3s,transform .3s}
+.e.read .seal{background:radial-gradient(circle at 35% 30%,#d4c3a6,#9b8768 70%);color:#f3ead9}
+.e .t{position:absolute;left:0;right:0;bottom:12px;z-index:3;font:italic 600 clamp(19px,2.4vw,22px)/1.2 "Cormorant Garamond",serif;padding:0 16px;text-wrap:balance}
+.e .t small{display:block;font:400 12px Karla,sans-serif;color:#7d6a58;font-style:normal;margin-bottom:2px}
+.e.opening .fl{transform:rotateX(180deg);z-index:0}
+.e.opening .seal{opacity:0;transform:scale(.6)}
+.e.opening .pp{transform:translateY(-58%)}
+.modal{position:fixed;inset:0;z-index:40;display:grid;place-items:center;padding:16px;background:rgba(5,4,3,.82);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .6s}
+.modal.show{opacity:1;pointer-events:auto}
+.letter{position:relative;width:min(600px,100%);max-height:calc(100svh - 32px);overflow:auto;background:var(--paper) repeating-linear-gradient(180deg,transparent 0 33px,rgba(150,120,90,.14) 33px 34px);color:var(--pInk);border-radius:6px;padding:clamp(28px,5vw,50px);box-shadow:0 30px 80px rgba(0,0,0,.6),0 0 80px rgba(242,195,122,.12),inset 0 0 60px rgba(160,120,70,.18);font:500 21px/1.6 "Cormorant Garamond",Georgia,serif;transform:translateY(40px) rotate(-1.5deg) scale(.96);transition:transform .7s cubic-bezier(.2,.7,.2,1)}
+.modal.show .letter{transform:none}
+.letter h3{font:italic 600 27px/1.2 "Cormorant Garamond",serif;margin:0 0 16px;color:#8b3442}
+.letter p{margin:0 0 12px}
+.letter .sig{text-align:right;font-style:italic;color:#8b3442;margin-top:8px}
+.x{position:absolute;top:8px;right:8px;width:44px;height:44px;padding:0;background:transparent;box-shadow:none;color:#7d6a58;font-size:28px}
+.x:hover{box-shadow:none}
+.promise{position:relative;min-height:100svh;display:grid;place-items:center;text-align:center;overflow:hidden;background:linear-gradient(180deg,rgba(13,10,9,0) 0,#140f1c 35%,#1d1530 70%,#2a1a24 100%);cursor:crosshair}
+.promise canvas{position:absolute;inset:0;width:100%;height:100%}
+.promise .in{position:relative;z-index:1;max-width:34em;padding:40px 0 70px}
+.promise p{margin:14px auto 0;color:#cfc2d6}
+.promise .from{font-family:"Cormorant Garamond",serif;font-style:italic;font-size:28px;color:var(--amber);margin-top:24px;text-shadow:0 0 24px rgba(242,195,122,.4)}
+.promise .tap{font-size:13px;color:#8d80a0;margin-top:30px}
+.promise button{margin-top:20px}
+@media(max-width:600px){.env{gap:46px 0}.letter{font-size:20px}}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="grain" aria-hidden="true"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <radialGradient id="hg"><stop offset="0" stop-color="#f2c37a" stop-opacity=".6"/><stop offset=".5" stop-color="#e8964a" stop-opacity=".15"/><stop offset="1" stop-color="#f2c37a" stop-opacity="0"/></radialGradient>
+    <linearGradient id="wax" x1="0" x2="1"><stop offset="0" stop-color="#b9a283"/><stop offset=".25" stop-color="#f1e4cf"/><stop offset=".7" stop-color="#e2cfb1"/><stop offset="1" stop-color="#9c8566"/></linearGradient>
+    <radialGradient id="fl" cx=".5" cy=".8" r=".7"><stop offset="0" stop-color="#ffffff"/><stop offset=".3" stop-color="#ffe9a8"/><stop offset=".7" stop-color="#ffb04a"/><stop offset="1" stop-color="#e2582a"/></radialGradient>
+    <radialGradient id="fl2" cx=".5" cy=".85" r=".6"><stop offset="0" stop-color="#bfe0ff"/><stop offset="1" stop-color="#5a8cff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="waxtop" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff6e6"/><stop offset="1" stop-color="#f3e2c4"/></linearGradient>
+    <filter id="soft"><feGaussianBlur stdDeviation="2"/></filter>
+    <g id="candleArt">
+      <circle class="halo" cx="60" cy="70" r="80" fill="url(#hg)"/>
+      <path class="flame" d="M60 22 C74 48 80 64 72 80 C67 91 53 91 48 80 C40 64 47 46 60 22Z" fill="url(#fl)" filter="url(#soft)" opacity=".7"/>
+      <path class="flame2" d="M60 30 C71 52 75 66 69 79 C65 88 55 88 51 79 C45 66 50 50 60 30Z" fill="url(#fl)"/>
+      <ellipse cx="60" cy="82" rx="5" ry="7" fill="url(#fl2)" opacity=".8"/>
+      <path d="M60 84 Q61 92 60 99" stroke="#2a1c12" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+      <path d="M34 98 H86 V208 H34Z" fill="url(#wax)"/>
+      <path d="M34 98 Q44 114 49 104 Q53 130 58 102 Q66 120 72 100 Q78 112 86 98Z" fill="url(#waxtop)"/>
+      <ellipse cx="60" cy="98" rx="26" ry="4" fill="#fff8ea"/>
+      <ellipse cx="60" cy="210" rx="48" ry="9" fill="#24180f"/>
+    </g>
+  </defs>
+</svg>
+<button class="mute" id="mute" aria-label="Mute music"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path id="wave" d="M16 9a4 4 0 0 1 0 6M19 6a8 8 0 0 1 0 12"/></svg></button>
+
+<main>
+<section class="film" id="film">
+  <div class="dawn" id="dawn"></div>
+  <div class="start" id="start">
+    <svg class="candle" viewBox="0 0 120 220" aria-hidden="true"><use href="#candleArt"/></svg>
+    <h1>For Nikita</h1>
+    <p>Before you start: find a quiet corner, put your headphones on if you have them, and take one slow breath. This one isn't a game.</p>
+    <button id="go">I'm ready</button>
+    <button class="ghost again" id="skip" hidden>Go straight to my letters</button>
+  </div>
+  <div class="stage" id="stage" aria-live="polite"><p class="line" id="line"></p></div>
+  <p class="tapHint" id="hint" hidden>tap anywhere if you want to go faster</p>
+  <div class="bar" id="bar"></div>
+</section>
+
+<div class="rest" id="rest" hidden>
+  <section class="band">
+    <div class="intro">
+      <h2>Letters, for later</h2>
+      <p>Some things can't all be said in one night. So I sealed them up for the moments you'll need them. Open each one only when it's time. Or open them all now. I'm not your boss.</p>
+    </div>
+    <div class="env" id="env"></div>
+  </section>
+
+  <section class="promise" id="promise">
+    <canvas id="lan" aria-hidden="true"></canvas>
+    <div class="in band">
+      <h2>This page doesn't expire</h2>
+      <p>Bookmark it. Come back on the bad days, on the good days, on the 2 a.m. days. It will be right here, exactly like this. And so will I.</p>
+      <p class="from">— Mohit, always in your corner</p>
+      <p class="tap">Every lantern up there is a wish for you. Tap the sky to send one more.</p>
+      <button class="ghost" id="replay">Watch it again</button>
+    </div>
+  </section>
+</div>
+</main>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="lt">
+  <article class="letter">
+    <button class="x" id="close" aria-label="Fold the letter back">&times;</button>
+    <h3 id="lt"></h3>
+    <div id="lb"></div>
+    <p class="sig">— M</p>
+  </article>
+</div>
+
+<script>
+{
+  const lines = [
+    ['Hi, Nikita.'],
+    ['I know it’s late. It’s always late when the real things get said.'],
+    ['So this time, no games. No dragons. No quests.'],
+    ['Just the truth.','big'],
+    ['You spend so much of your time being strong for everyone around you'],
+    ['that I don’t think anyone has ever stopped to ask you…'],
+    ['who’s being strong for you?','rose'],
+    ['So for the next few minutes, you don’t have to be.'],
+    ['Let me tell you what I see when I look at you.'],
+    ['Someone who lights up a room without even trying.'],
+    ['Who still believes in good people and happy endings, even after the world gave her every reason not to.'],
+    ['Who got hurt… and somehow didn’t turn cold.'],
+    ['Who notices everyone else’s pain, and hides her own so nobody has to worry.'],
+    ['I noticed, by the way.'],
+    ['Someone always does. Remember that.','rose'],
+    ['I know there were days you felt like too much.'],
+    ['And days you felt like not enough.'],
+    ['Both of those were lies.','big'],
+    ['You are exactly enough. You always were.'],
+    ['The day you started trusting me, I didn’t say much.'],
+    ['But it meant a lot. More than you probably know.'],
+    ['Thank you for letting me be one of your people.','rose'],
+    ['I’ll always make sure you were right about me.'],
+    ['So here’s my promise.'],
+    ['On your loud days, I’ll be the quiet.'],
+    ['On your quiet days, I’ll be the noise.'],
+    ['And on the days you forget how amazing you are…'],
+    ['I’ll remind you. Again and again.','big'],
+    ['You are not alone in this, Nikita.'],
+    ['Not now. Not ever.','rose'],
+    ['It’s okay if you’re crying. You’re allowed to. I’ll wait.'],
+    ['…'],
+    ['Okay. Now scroll down. I left you some things for later.','big']
+  ];
+
+  const letters = [
+    ['you feel alone', `<p>Hey. Look around the room for a second. Okay, I'm not physically there. But I'm a message away, a call away, at any hour, for any reason, even a stupid one. Especially a stupid one.</p><p>Feeling alone is a feeling. It is not a fact. The fact is that you have people who genuinely care how you're doing, and I'm right at the front of that line. So text me. Right now. Even if it's just a single dot.</p>`],
+    ['you can’t sleep', `<p>Overthinking again, aren't you? I know that brain of yours. It writes entire fantasy novels at 3 a.m., and most of them are about everything that could go wrong.</p><p>Here's the real ending: tomorrow will be okay. Maybe not perfect, but okay. Put the phone down after this, put on your comfort playlist, and let that brain of yours take the night off. I bet you're asleep before the third song.</p>`],
+    ['someone makes you feel small', `<p>First of all: give me their name.</p><p>Second, and more seriously: the way someone treats you says everything about them and nothing about your worth. You've already survived someone who didn't know what they had. You came out of it kinder, not colder. Do you know how rare that is?</p><p>Stand up straight. You were never small. They were just standing too far away to see you properly.</p>`],
+    ['you feel like you’re not enough', `<p>Read this slowly.</p><p>You are enough on the days you get everything done, and on the days you can't get out of bed. You're enough when everything goes right and when nothing does. You don't have to earn your place in anyone's life, definitely not in mine.</p><p>If you could see yourself the way the people who love you see you, you'd never open this envelope again.</p>`],
+    ['you’re really, really happy', `<p>YES. This is my favourite envelope.</p><p>Whatever it is, I hope you're grinning like an idiot right now. Remember this exact feeling. Write it down somewhere. Save it for the next rainy day as proof that good days come back. They always do.</p><p>Now stop reading this and go tell me what happened. I want every detail.</p>`],
+    ['you want to give up on something you love', `<p>Before you quit, the dream, the hobby, whatever it is, try one more time. Just for yourself, with no audience and no pressure.</p><p>Every person you admire had a day exactly like this one, where it felt pointless. The only difference between them and everyone else is that they tried one more time.</p><p>Rest if you need to. Take a break. But don't you dare let go of the thing that makes you, you.</p>`]
+  ];
+
+  const calm = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  /* ---------- drifting bokeh light ---------- */
+  const cv = document.getElementById('bg'), g = cv.getContext('2d');
+  let W = 0, H = 0, mx = 0, my = 0, warm = 0, warmT = 0;
+  const fit = (c, el) => { const d = Math.min(devicePixelRatio || 1, 2), w = el ? el.clientWidth : innerWidth, h = el ? el.clientHeight : innerHeight; c.width = w * d; c.height = h * d; c.getContext('2d').setTransform(d, 0, 0, d, 0, 0); return [w, h]; };
+  const sizeBg = () => { [W, H] = fit(cv); };
+  sizeBg(); addEventListener('resize', sizeBg);
+  const dots = Array.from({length: innerWidth < 600 ? 26 : 42}, () => ({x: Math.random(), y: Math.random(), r: 10 + Math.random() * 50, z: .2 + Math.random() * .8, c: Math.random() < .72 ? '242,195,122' : '231,161,166', a: .05 + Math.random() * .12, vx: (Math.random() - .5) * .00012, vy: -.00006 - Math.random() * .00016, ph: Math.random() * 6.3}));
+  addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; });
+  const drawBg = t => {
+    warm += (warmT - warm) * .01;
+    g.clearRect(0, 0, W, H);
+    for (const p of dots) {
+      if (!calm) { p.x += p.vx; p.y += p.vy; if (p.y < -.1) { p.y = 1.1; p.x = Math.random(); } if (p.x < -.1) p.x = 1.1; if (p.x > 1.1) p.x = -.1; }
+      const x = (p.x - mx * .04 * p.z) * W, y = (p.y - my * .04 * p.z) * H, tw = .55 + .45 * Math.sin(t / 1600 + p.ph), r = p.r * (1 + warm * .3);
+      const gr = g.createRadialGradient(x, y, 0, x, y, r);
+      gr.addColorStop(0, `rgba(${p.c},${(p.a * tw * (1 + warm)).toFixed(3)})`); gr.addColorStop(.55, `rgba(${p.c},${(p.a * tw * .35).toFixed(3)})`); gr.addColorStop(1, `rgba(${p.c},0)`);
+      g.fillStyle = gr; g.beginPath(); g.arc(x, y, r, 0, 6.3); g.fill();
+    }
+  };
+
+  /* ---------- lanterns ---------- */
+  const promise = document.getElementById('promise'), lc = document.getElementById('lan'), lg = lc.getContext('2d');
+  let LW = 0, LH = 0, lanVisible = false;
+  const sizeLan = () => { if (promise.offsetParent) [LW, LH] = fit(lc, promise); };
+  addEventListener('resize', sizeLan);
+  const mkLan = (x, y, s) => ({x: x ?? Math.random() * (LW || innerWidth), y: y ?? (LH || innerHeight) + 40 + Math.random() * 400, s: s ?? 8 + Math.random() * 16, v: .25 + Math.random() * .45, ph: Math.random() * 6.3, fl: Math.random() * 6.3});
+  let lans = [];
+  const stars = Array.from({length: 90}, () => ({x: Math.random(), y: Math.random() * .7, r: Math.random() * 1.3 + .3, ph: Math.random() * 6.3}));
+  const drawLan = t => {
+    lg.clearRect(0, 0, LW, LH);
+    for (const s of stars) { lg.fillStyle = `rgba(255,245,230,${(.25 + .35 * Math.sin(t / 900 + s.ph) ** 2).toFixed(2)})`; lg.beginPath(); lg.arc(s.x * LW, s.y * LH, s.r, 0, 6.3); lg.fill(); }
+    for (const l of lans) {
+      if (!calm) { l.y -= l.v * (l.s / 14); l.x += Math.sin(t / 2200 + l.ph) * .18; }
+      if (l.y < -60) Object.assign(l, mkLan(undefined, LH + 40));
+      const s = l.s, x = l.x, y = l.y, fade = Math.min(1, Math.max(0, y / (LH * .35))), flick = .85 + .15 * Math.sin(t / 120 + l.fl);
+      const gl = lg.createRadialGradient(x, y, 0, x, y, s * 3.2);
+      gl.addColorStop(0, `rgba(255,170,80,${(.35 * fade * flick).toFixed(3)})`); gl.addColorStop(1, 'rgba(255,170,80,0)');
+      lg.fillStyle = gl; lg.beginPath(); lg.arc(x, y, s * 3.2, 0, 6.3); lg.fill();
+      const body = lg.createLinearGradient(x, y - s, x, y + s);
+      body.addColorStop(0, `rgba(255,214,140,${(.95 * fade).toFixed(3)})`); body.addColorStop(1, `rgba(232,110,50,${(.95 * fade).toFixed(3)})`);
+      lg.fillStyle = body; lg.beginPath();
+      lg.moveTo(x - s * .55, y - s); lg.quadraticCurveTo(x, y - s * 1.25, x + s * .55, y - s);
+      lg.lineTo(x + s * .42, y + s * .9); lg.quadraticCurveTo(x, y + s * 1.02, x - s * .42, y + s * .9); lg.closePath(); lg.fill();
+      lg.fillStyle = `rgba(255,250,220,${(.9 * fade * flick).toFixed(3)})`; lg.beginPath(); lg.ellipse(x, y + s * .9, s * .3, s * .1, 0, 0, 6.3); lg.fill();
+    }
+  };
+  promise.addEventListener('pointerdown', e => {
+    if (e.target.closest('button')) return;
+    const r = promise.getBoundingClientRect();
+    lans.push(mkLan(e.clientX - r.left, e.clientY - r.top, 16 + Math.random() * 8));
+    if (ac) note(84 + [0, 3, 7][Math.floor(Math.random() * 3)], ac.currentTime, .05, 2.5);
+  });
+  new IntersectionObserver(es => { lanVisible = es[0].isIntersecting; if (lanVisible) { if (!LW) sizeLan(); if (LW && !lans.length) lans = Array.from({length: innerWidth < 600 ? 18 : 28}, () => { const l = mkLan(); l.y = Math.random() * LH; return l; }); } }).observe(promise);
+
+  const loopFrame = t => { drawBg(t); if (lanVisible && LW) drawLan(t); requestAnimationFrame(loopFrame); };
+  requestAnimationFrame(loopFrame);
+
+  /* ---------- soft music ---------- */
+  let ac = null, master = null, verb = null, loop = null, muted = false;
+  const audio = () => {
+    try {
+      if (!ac) {
+        ac = new (window.AudioContext || window.webkitAudioContext)();
+        master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+        verb = ac.createConvolver();
+        const len = ac.sampleRate * 3.5, buf = ac.createBuffer(2, len, ac.sampleRate);
+        for (let c = 0; c < 2; c++) { const d = buf.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 2.5; }
+        verb.buffer = buf; const wet = ac.createGain(); wet.gain.value = .55; verb.connect(wet); wet.connect(master);
+      }
+      if (ac.state === 'suspended') ac.resume();
+    } catch (e) { ac = null; }
+    return ac;
+  };
+  const note = (m, t, v = .12, len = 4) => {
+    if (!ac) return;
+    const f = 440 * 2 ** ((m - 69) / 12), gn = ac.createGain();
+    gn.gain.setValueAtTime(.0001, t); gn.gain.exponentialRampToValueAtTime(v, t + .03); gn.gain.exponentialRampToValueAtTime(.0001, t + len);
+    gn.connect(master); gn.connect(verb);
+    [[1,'sine',1],[2,'triangle',.14],[3,'sine',.04]].forEach(([h,ty,a]) => { const o = ac.createOscillator(), og = ac.createGain(); o.type = ty; o.frequency.value = f * h; og.gain.value = a; o.connect(og); og.connect(gn); o.start(t); o.stop(t + len + .1); });
+  };
+  const chords = [[48,55,64,71,67],[45,52,60,67,64],[41,48,57,64,60],[43,50,59,62,67]];
+  let ci = 0;
+  const bar = () => {
+    if (!ac) return;
+    const t = ac.currentTime + .05, ch = chords[ci++ % 4];
+    note(ch[0] - 12, t, .1, 6); note(ch[0], t, .07, 5);
+    ch.slice(1).forEach((m, i) => note(m, t + .6 + i * .55, .08, 4.5));
+    if (ci % 2 === 0) note(ch[3] + 12, t + 3.2, .04, 3);
+  };
+  const music = on => {
+    if (!audio()) return;
+    const t = ac.currentTime;
+    master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t);
+    master.gain.linearRampToValueAtTime(on && !muted ? .9 : 0, t + 2);
+    if (on && !loop) { bar(); loop = setInterval(bar, 4200); }
+  };
+
+  /* ---------- the film ---------- */
+  const film = document.getElementById('film'), start = document.getElementById('start'), stage = document.getElementById('stage'), lineEl = document.getElementById('line');
+  const hint = document.getElementById('hint'), barEl = document.getElementById('bar'), rest = document.getElementById('rest'), muteBtn = document.getElementById('mute'), dawn = document.getElementById('dawn');
+  let seen = false;
+  try { seen = localStorage.getItem('for-nikita-seen') === '1'; } catch (e) {}
+  if (seen) document.getElementById('skip').hidden = false;
+
+  let idx = -1, timer = null, playing = false;
+  const show = i => {
+    clearTimeout(timer);
+    if (i >= lines.length) return finish();
+    const first = idx < 0 || i === 0;
+    idx = i;
+    lineEl.classList.add('out');
+    timer = setTimeout(() => {
+      const [txt, cls] = lines[i], words = txt.split(' ');
+      lineEl.className = 'line' + (cls ? ' ' + cls : '');
+      lineEl.innerHTML = words.map((w, k) => `<span style="transition-delay:${k * 85}ms">${w}</span>`).join(' ');
+      void lineEl.offsetWidth; lineEl.classList.add('show');
+      barEl.style.width = ((i + 1) / lines.length * 100) + '%';
+      warmT = cls === 'big' ? .9 : cls === 'rose' ? .5 : .15;
+      const hold = (txt === '…' ? 3200 : 2600 + txt.length * 50) + words.length * 85 + (cls === 'big' ? 900 : 0);
+      timer = setTimeout(() => show(i + 1), hold);
+    }, first ? 200 : 850);
+  };
+  const begin = () => {
+    playing = true; idx = -1; music(true); muteBtn.classList.add('on');
+    start.classList.add('away');
+    setTimeout(() => { start.hidden = true; stage.classList.add('on'); hint.hidden = false; hint.style.opacity = 1; setTimeout(() => hint.style.opacity = 0, 7000); show(0); }, 1400);
+  };
+  const finish = () => {
+    playing = false; clearTimeout(timer); warmT = 1; dawn.classList.add('on');
+    try { localStorage.setItem('for-nikita-seen', '1'); } catch (e) {}
+    setTimeout(() => { rest.hidden = false; sizeLan(); setTimeout(() => rest.scrollIntoView({behavior: 'smooth'}), 300); }, 1800);
+  };
+  document.getElementById('go').addEventListener('click', begin);
+  document.getElementById('skip').addEventListener('click', () => { music(true); muteBtn.classList.add('on'); rest.hidden = false; sizeLan(); rest.scrollIntoView({behavior: 'smooth'}); });
+  stage.addEventListener('click', () => { if (playing) show(idx + 1); });
+  document.getElementById('replay').addEventListener('click', () => {
+    start.hidden = true; dawn.classList.remove('on'); warmT = 0;
+    film.scrollIntoView({behavior: 'smooth'}); barEl.style.width = 0; lineEl.className = 'line out';
+    setTimeout(() => { playing = true; idx = -1; music(true); stage.classList.add('on'); show(0); }, 1000);
+  });
+  muteBtn.addEventListener('click', () => {
+    muted = !muted; document.getElementById('wave').style.display = muted ? 'none' : '';
+    muteBtn.setAttribute('aria-label', muted ? 'Play music' : 'Mute music'); music(true);
+  });
+
+  /* ---------- letters ---------- */
+  let opened = {};
+  try { opened = JSON.parse(localStorage.getItem('for-nikita-opened') || '{}') || {}; } catch (e) { opened = {}; }
+  const env = document.getElementById('env'), modal = document.getElementById('modal');
+  const drawEnv = () => env.innerHTML = letters.map(([t], i) => `<button class="e ${opened[i] ? 'read' : ''}" data-i="${i}" aria-label="Open when ${t}"><span class="pp"></span><span class="sd"></span><span class="pk"></span><span class="t"><small>open when</small>${t}</span><span class="fl"></span><span class="seal">N</span></button>`).join('');
+  drawEnv();
+  let lastI = 0, busy = false;
+  env.addEventListener('click', e => {
+    const b = e.target.closest('.e'); if (!b || busy) return;
+    const i = +b.dataset.i; lastI = i; busy = true;
+    b.classList.add('opening');
+    if (ac) [76, 79, 84].forEach((m, k) => note(m, ac.currentTime + k * .18, .05, 2.5));
+    setTimeout(() => {
+      document.getElementById('lt').textContent = 'Open when ' + letters[i][0];
+      document.getElementById('lb').innerHTML = letters[i][1];
+      modal.classList.add('show'); modal.querySelector('.letter').scrollTop = 0; document.getElementById('close').focus();
+      opened[i] = 1; try { localStorage.setItem('for-nikita-opened', JSON.stringify(opened)); } catch (e) {}
+      busy = false;
+    }, calm ? 0 : 1100);
+  });
+  const close = () => { modal.classList.remove('show'); setTimeout(() => { drawEnv(); const b = env.querySelector(`[data-i="${lastI}"]`); if (b) b.focus(); }, 300); };
+  document.getElementById('close').addEventListener('click', close);
+  modal.addEventListener('click', e => { if (e.target === modal) close(); });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && modal.classList.contains('show')) close();
+    else if ((e.key === ' ' || e.key === 'ArrowRight') && playing) { e.preventDefault(); show(idx + 1); }
+  });
+}
+</script>
+</body>
+</html>
